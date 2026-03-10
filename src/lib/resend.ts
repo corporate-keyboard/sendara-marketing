@@ -255,9 +255,9 @@ function adminNotificationHtml(leadData: Record<string, unknown>): string {
     <!-- Badge -->
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:20px;">
       <tr>
-        <td style="padding:6px 14px;background-color:${type === 'callback' ? BRAND.teal : BRAND.deepBlue};border-radius:20px;">
+        <td style="padding:6px 14px;background-color:${type === 'partner' ? BRAND.brightTeal : type === 'callback' ? BRAND.teal : BRAND.deepBlue};border-radius:20px;">
           <span style="font-size:12px;font-weight:600;color:${BRAND.white};text-transform:uppercase;letter-spacing:1px;">
-            ${type === 'callback' ? 'Call Back Request' : 'Waitlist Signup'}
+            ${type === 'partner' ? 'Partner Application' : type === 'callback' ? 'Call Back Request' : 'Waitlist Signup'}
           </span>
         </td>
       </tr>
@@ -318,5 +318,29 @@ export async function sendAdminNotification(leadData: Record<string, unknown>) {
     subject: `New ${type === 'callback' ? 'Call Back' : 'Waitlist'} Lead: ${agencyName}`,
     html: adminNotificationHtml(leadData),
     text: plainText(leadData),
+  });
+}
+
+export async function sendPartnerNotification(data: { name: string; email: string; agency: string; tier: string; message?: string }) {
+  const adminEmail = process.env.ADMIN_EMAIL || "amar@omnex.one";
+
+  const partnerData: Record<string, unknown> = {
+    type: 'partner',
+    name: data.name,
+    email: data.email,
+    agency_name: data.agency,
+    tier: data.tier,
+    message: data.message || '—',
+    source: 'partners-page',
+  };
+
+  const html = adminNotificationHtml(partnerData);
+
+  await getResend().emails.send({
+    from: "Sendara Partners <noreply@sendara.one>",
+    to: adminEmail,
+    subject: `New Partner Application: ${data.agency} — ${data.tier}`,
+    html,
+    text: `New partner application:\n\nName: ${data.name}\nEmail: ${data.email}\nAgency: ${data.agency}\nTier: ${data.tier}\nMessage: ${data.message || 'N/A'}\n\nTimestamp: ${new Date().toISOString()}`,
   });
 }
