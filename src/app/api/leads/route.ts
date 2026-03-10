@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { demoFormSchema, waitlistFormSchema } from "@/lib/schemas";
+import { callbackFormSchema, waitlistFormSchema } from "@/lib/schemas";
 
 export const dynamic = "force-dynamic";
 
@@ -8,8 +8,8 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { type, ...data } = body;
 
-    if (type === "demo") {
-      const parsed = demoFormSchema.safeParse(data);
+    if (type === "callback") {
+      const parsed = callbackFormSchema.safeParse(data);
       if (!parsed.success) {
         return NextResponse.json({ error: parsed.error.flatten().fieldErrors }, { status: 400 });
       }
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
     if (process.env.RESEND_API_KEY) {
       try {
         const { sendLeadConfirmation, sendAdminNotification } = await import("@/lib/resend");
-        await sendLeadConfirmation(data.email, type, data.name);
+        await sendLeadConfirmation(data.email, type, data.name, data.preferred_time);
         await sendAdminNotification(leadRecord);
       } catch (emailError) {
         console.error("Email send error:", emailError);

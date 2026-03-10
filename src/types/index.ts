@@ -1,10 +1,10 @@
 export interface Lead {
-  type: 'demo' | 'waitlist';
+  type: 'callback' | 'waitlist';
   name?: string;
   email: string;
   agency_name?: string;
   phone?: string;
-  agents_count?: string;
+  preferred_time?: string;
   source?: string;
   utm_source?: string;
   utm_medium?: string;

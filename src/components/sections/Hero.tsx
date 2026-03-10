@@ -33,7 +33,7 @@ export default function Hero() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <a href="#lead-capture">
-                <Button size="lg">Book a Demo</Button>
+                <Button size="lg">Get a Call Back</Button>
               </a>
               <a href="#lead-capture">
                 <Button variant="secondary" size="lg">

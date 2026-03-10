@@ -49,7 +49,7 @@ export default function Navbar() {
               </a>
             ))}
             <a href="#lead-capture">
-              <Button size="sm">Book a Demo</Button>
+              <Button size="sm">Get a Call Back</Button>
             </a>
           </div>
 
@@ -87,7 +87,7 @@ export default function Navbar() {
             <div className="px-4 pt-2">
               <a href="#lead-capture" onClick={() => setMobileOpen(false)}>
                 <Button size="sm" className="w-full">
-                  Book a Demo
+                  Get a Call Back
                 </Button>
               </a>
             </div>

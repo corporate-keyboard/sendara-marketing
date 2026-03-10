@@ -7,22 +7,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import Button from "@/components/ui/Button";
-import { demoFormSchema, waitlistFormSchema, type DemoFormData, type WaitlistFormData } from "@/lib/schemas";
+import { callbackFormSchema, waitlistFormSchema, type CallbackFormData, type WaitlistFormData } from "@/lib/schemas";
 
-function DemoForm() {
+function CallbackForm() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<DemoFormData>({
-    resolver: zodResolver(demoFormSchema),
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<CallbackFormData>({
+    resolver: zodResolver(callbackFormSchema),
   });
 
-  const onSubmit = async (data: DemoFormData) => {
+  const onSubmit = async (data: CallbackFormData) => {
     setError("");
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "demo", ...data }),
+        body: JSON.stringify({ type: "callback", ...data }),
       });
       if (!res.ok) throw new Error("Failed to submit");
       setSubmitted(true);
@@ -41,8 +41,8 @@ function DemoForm() {
         >
           <Check className="text-success" size={32} />
         </motion.div>
-        <h3 className="font-heading font-semibold text-xl text-sendara-navy mb-2">You&apos;re in!</h3>
-        <p className="font-body text-sendara-navy/60">We&apos;ll reach out within 24 hours to schedule your demo.</p>
+        <h3 className="font-heading font-semibold text-xl text-sendara-navy mb-2">We&apos;ll call you!</h3>
+        <p className="font-body text-sendara-navy/60">Expect a call within 24 hours at your preferred time.</p>
       </div>
     );
   }
@@ -66,18 +66,18 @@ function DemoForm() {
         {errors.phone && <p className="text-danger text-xs mt-1">{errors.phone.message}</p>}
       </div>
       <div>
-        <select {...register("agents_count")} className="w-full px-4 py-3 rounded-lg border border-gray-200 font-body text-sm focus:outline-none focus:border-sendara-teal focus:ring-1 focus:ring-sendara-teal text-sendara-navy/60" defaultValue="">
-          <option value="" disabled>Number of Agents</option>
-          <option value="1-10">1-10 agents</option>
-          <option value="11-50">11-50 agents</option>
-          <option value="51-100">51-100 agents</option>
-          <option value="100+">100+ agents</option>
+        <select {...register("preferred_time")} className="w-full px-4 py-3 rounded-lg border border-gray-200 font-body text-sm focus:outline-none focus:border-sendara-teal focus:ring-1 focus:ring-sendara-teal text-sendara-navy/60" defaultValue="">
+          <option value="" disabled>Preferred Call Time</option>
+          <option value="morning">Morning (9 AM - 12 PM)</option>
+          <option value="afternoon">Afternoon (12 PM - 4 PM)</option>
+          <option value="evening">Evening (4 PM - 7 PM)</option>
+          <option value="anytime">Anytime</option>
         </select>
-        {errors.agents_count && <p className="text-danger text-xs mt-1">{errors.agents_count.message}</p>}
+        {errors.preferred_time && <p className="text-danger text-xs mt-1">{errors.preferred_time.message}</p>}
       </div>
       {error && <p className="text-danger text-sm">{error}</p>}
       <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? "Submitting..." : "Book My Demo"}
+        {isSubmitting ? "Submitting..." : "Request a Call Back"}
       </Button>
     </form>
   );
@@ -163,9 +163,9 @@ export default function LeadCapture() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="bg-white rounded-2xl p-6 md:p-8"
           >
-            <h3 className="font-heading font-semibold text-xl text-sendara-navy mb-2">Book a Demo</h3>
-            <p className="font-body text-sm text-sendara-navy/60 mb-6">15-minute walkthrough. No commitment.</p>
-            <DemoForm />
+            <h3 className="font-heading font-semibold text-xl text-sendara-navy mb-2">Request a Call Back</h3>
+            <p className="font-body text-sm text-sendara-navy/60 mb-6">We&apos;ll call you at your preferred time.</p>
+            <CallbackForm />
           </motion.div>
 
           <motion.div

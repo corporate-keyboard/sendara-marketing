@@ -89,38 +89,46 @@ function emailLayout(content: string): string {
 </html>`;
 }
 
-function demoConfirmationHtml(name: string): string {
+function callbackConfirmationHtml(name: string, preferredTime: string): string {
+  const timeLabels: Record<string, string> = {
+    morning: "Morning (9 AM - 12 PM)",
+    afternoon: "Afternoon (12 PM - 4 PM)",
+    evening: "Evening (4 PM - 7 PM)",
+    anytime: "Anytime",
+  };
+  const timeDisplay = timeLabels[preferredTime] || preferredTime;
+
   return emailLayout(`
     <h1 style="margin:0 0 8px;font-size:24px;font-weight:700;color:${BRAND.navy};">
-      You're in. We'll be in touch.
+      We'll call you back.
     </h1>
     <p style="margin:0 0 24px;font-size:15px;color:${BRAND.textMuted};line-height:1.5;">
-      Hi ${name}, thanks for requesting a demo of Sendara.
+      Hi ${name}, thanks for requesting a call back from Sendara.
     </p>
 
     <p style="margin:0 0 24px;font-size:15px;color:${BRAND.textDark};line-height:1.6;">
-      We'll reach out within <strong>24 hours</strong> to schedule your personalized walkthrough.
+      A member of our team will reach out within <strong>24 hours</strong> during your preferred time.
     </p>
 
-    <!-- What to Expect -->
+    <!-- Call Details -->
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:28px;">
       <tr>
         <td style="padding:20px;background-color:${BRAND.tealLight};border-radius:8px;border-left:4px solid ${BRAND.teal};">
-          <p style="margin:0 0 12px;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:${BRAND.teal};">What to Expect</p>
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+          <p style="margin:0 0 12px;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:${BRAND.teal};">Your Call Back Details</p>
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
             <tr>
               <td style="padding:4px 0;font-size:14px;color:${BRAND.textDark};line-height:1.5;">
-                <span style="color:${BRAND.brightTeal};font-weight:bold;margin-right:8px;">01</span> A personalized walkthrough of the platform
+                <span style="color:${BRAND.brightTeal};font-weight:bold;margin-right:8px;">01</span> Preferred time: <strong>${timeDisplay}</strong>
               </td>
             </tr>
             <tr>
               <td style="padding:4px 0;font-size:14px;color:${BRAND.textDark};line-height:1.5;">
-                <span style="color:${BRAND.brightTeal};font-weight:bold;margin-right:8px;">02</span> Campaign strategy tailored to your agency
+                <span style="color:${BRAND.brightTeal};font-weight:bold;margin-right:8px;">02</span> We'll discuss how Sendara fits your agency
               </td>
             </tr>
             <tr>
               <td style="padding:4px 0;font-size:14px;color:${BRAND.textDark};line-height:1.5;">
-                <span style="color:${BRAND.brightTeal};font-weight:bold;margin-right:8px;">03</span> Answers to all your questions
+                <span style="color:${BRAND.brightTeal};font-weight:bold;margin-right:8px;">03</span> No commitment — just a quick conversation
               </td>
             </tr>
           </table>
@@ -142,8 +150,8 @@ function demoConfirmationHtml(name: string): string {
         </td>
         <td width="8"></td>
         <td width="33%" align="center" style="padding:16px 8px;background-color:${BRAND.offWhite};border-radius:8px;">
-          <div style="font-size:22px;font-weight:700;color:${BRAND.navy};">15 min</div>
-          <div style="font-size:11px;color:${BRAND.textMuted};margin-top:4px;">Quick demo</div>
+          <div style="font-size:22px;font-weight:700;color:${BRAND.navy};">5 min</div>
+          <div style="font-size:11px;color:${BRAND.textMuted};margin-top:4px;">Quick call</div>
         </td>
       </tr>
     </table>
@@ -247,9 +255,9 @@ function adminNotificationHtml(leadData: Record<string, unknown>): string {
     <!-- Badge -->
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin-bottom:20px;">
       <tr>
-        <td style="padding:6px 14px;background-color:${type === 'demo' ? BRAND.teal : BRAND.deepBlue};border-radius:20px;">
+        <td style="padding:6px 14px;background-color:${type === 'callback' ? BRAND.teal : BRAND.deepBlue};border-radius:20px;">
           <span style="font-size:12px;font-weight:600;color:${BRAND.white};text-transform:uppercase;letter-spacing:1px;">
-            ${type === 'demo' ? 'Demo Request' : 'Waitlist Signup'}
+            ${type === 'callback' ? 'Call Back Request' : 'Waitlist Signup'}
           </span>
         </td>
       </tr>
@@ -277,17 +285,17 @@ function plainText(leadData: Record<string, unknown>): string {
   return `New lead received:\n\n${JSON.stringify(leadData, null, 2)}\n\nTimestamp: ${new Date().toISOString()}`;
 }
 
-export async function sendLeadConfirmation(email: string, type: 'demo' | 'waitlist', name?: string) {
-  const subject = type === 'demo'
-    ? "You're in — Demo request received"
+export async function sendLeadConfirmation(email: string, type: 'callback' | 'waitlist', name?: string, preferredTime?: string) {
+  const subject = type === 'callback'
+    ? "We'll call you back — Request received"
     : "You're on the Sendara waitlist";
 
-  const html = type === 'demo'
-    ? demoConfirmationHtml(name || 'there')
+  const html = type === 'callback'
+    ? callbackConfirmationHtml(name || 'there', preferredTime || 'anytime')
     : waitlistConfirmationHtml();
 
-  const text = type === 'demo'
-    ? `Hi ${name || 'there'},\n\nThank you for requesting a demo of Sendara. We'll reach out within 24 hours to schedule your 15-minute demo.\n\nWhat to expect:\n1. A personalized walkthrough of the platform\n2. Campaign strategy tailored to your agency\n3. Answers to all your questions\n\nTalk soon,\nThe Sendara Team`
+  const text = type === 'callback'
+    ? `Hi ${name || 'there'},\n\nThank you for requesting a call back from Sendara. A member of our team will reach out within 24 hours during your preferred time.\n\nWhat to expect:\n1. A quick conversation about your agency's needs\n2. How Sendara fits your workflow\n3. No commitment required\n\nTalk soon,\nThe Sendara Team`
     : `Hi there,\n\nYou're on the Sendara early access list. We'll notify you as soon as we're ready to onboard new agencies.\n\nWe'll be in touch,\nThe Sendara Team`;
 
   await getResend().emails.send({
@@ -307,7 +315,7 @@ export async function sendAdminNotification(leadData: Record<string, unknown>) {
   await getResend().emails.send({
     from: "Sendara Leads <noreply@sendara.one>",
     to: adminEmail,
-    subject: `New ${type === 'demo' ? 'Demo' : 'Waitlist'} Lead: ${agencyName}`,
+    subject: `New ${type === 'callback' ? 'Call Back' : 'Waitlist'} Lead: ${agencyName}`,
     html: adminNotificationHtml(leadData),
     text: plainText(leadData),
   });
