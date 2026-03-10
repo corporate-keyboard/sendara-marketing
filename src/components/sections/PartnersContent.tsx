@@ -12,12 +12,12 @@ const tiers = [
     name: "Design Partner",
     badge: "LAUNCH OFFER",
     badgeColor: "bg-sendara-bright",
-    price: "AED 399",
+    price: "AED 499",
     original: "AED 799",
     period: "/mo for 6 months",
     desc: "For agencies joining before product launch. Shape the product with us.",
     benefits: [
-      "Onboarding fee waived (AED 5,000 value)",
+      "50% off onboarding fee (AED 2,500 saved)",
       "50% off platform fee for 6 months",
       "Direct product team access",
       "Priority feature requests",
@@ -37,7 +37,7 @@ const tiers = [
     name: "Growth Partner",
     badge: "ONGOING",
     badgeColor: "bg-sendara-teal",
-    price: "AED 599",
+    price: "AED 699",
     original: "AED 799",
     period: "/mo — permanent",
     desc: "For agencies willing to share their success story in exchange for ongoing savings.",
@@ -62,12 +62,13 @@ const tiers = [
     name: "Referral Partner",
     badge: "EARN",
     badgeColor: "bg-sendara-deep",
-    price: "20%",
+    price: "15%",
     original: "",
     period: "rev share — recurring",
     desc: "Recommend Sendara. Earn recurring commission on every client you bring.",
     benefits: [
-      "20% of referred client's platform fee — recurring",
+      "15% of referred client's platform fee — recurring",
+      "Direct access to product team",
       "Unique referral tracking link",
       "Monthly commission reports",
       "No platform fee required to join",
@@ -103,11 +104,11 @@ const steps = [
 ];
 
 const faqs = [
-  { q: "Can I combine Design Partner and Referral Partner?", a: "Yes. Design Partners can also refer agencies and earn 20% rev share on each referred client. The programs stack." },
+  { q: "Can I combine Design Partner and Referral Partner?", a: "Yes. Design Partners can also refer agencies and earn 15% rev share on each referred client. The programs stack." },
   { q: "What if our results aren't great? Do we still owe a case study?", a: "No. Content collaboration is only triggered by positive outcomes. If the platform isn't delivering, we'd rather fix the product than pressure you for a testimonial." },
   { q: "How long does the Design Partner discount last?", a: "6 months at 50% off (AED 399/mo). After that, you move to standard pricing or can transition to Growth Partner for 25% off permanently." },
   { q: "What does 'anonymized case study' mean?", a: "We share the results (e.g., 'Dubai agency reduced block rate from 12% to 1.3% in 6 weeks') without naming your company unless you explicitly approve a branded version." },
-  { q: "Is the referral commission really recurring?", a: "Yes. For as long as the referred client remains a paying Sendara customer, you earn 20% of their monthly platform fee. No cap, no expiry." },
+  { q: "Is the referral commission really recurring?", a: "Yes. For as long as the referred client remains a paying Sendara customer, you earn 15% of their monthly platform fee. No cap, no expiry." },
   { q: "Do I need to be a Sendara client to be a Referral Partner?", a: "No. Referral Partners don't need to use the platform themselves. That said, it's much easier to recommend something you've used." },
 ];
 
@@ -440,7 +441,7 @@ export default function PartnersContent() {
                       <option value="" disabled>Select a tier...</option>
                       <option value="Design Partner">Design Partner — 50% off, 6 months</option>
                       <option value="Growth Partner">Growth Partner — 25% off, permanent</option>
-                      <option value="Referral Partner">Referral Partner — 20% rev share</option>
+                      <option value="Referral Partner">Referral Partner — 15% rev share</option>
                       <option value="Not sure">Not sure yet — tell me more</option>
                     </select>
                   </div>
