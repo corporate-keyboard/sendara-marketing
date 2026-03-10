@@ -73,7 +73,6 @@ const tiers = [
       "Monthly commission reports",
       "No platform fee required to join",
       "Co-marketing opportunities",
-      "Dedicated partner manager",
     ],
     youGive: [
       "Active referrals to qualified agencies",
