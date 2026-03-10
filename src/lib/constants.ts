@@ -109,7 +109,7 @@ export const FAQ_ITEMS: FAQItem[] = [
   },
   {
     question: "Will Sendara guarantee I won't get blocked?",
-    answer: "No tool can guarantee that — anyone who claims otherwise is lying. What Sendara does is dramatically reduce the risk by automating warm-up, monitoring quality scores in real-time, and auto-pausing campaigns before Meta takes action.",
+    answer: "No platform can override Meta's enforcement — but Sendara dramatically reduces the risk. We automate warm-up, monitor quality scores in real-time, and auto-pause campaigns before Meta takes action. Our customers consistently maintain Green quality ratings.",
   },
   {
     question: "How long does warm-up take?",
