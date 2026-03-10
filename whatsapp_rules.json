@@ -1,0 +1,269 @@
+{
+  "version": "1.0.0",
+  "last_updated": "2026-03-10",
+  "meta_policy_version": "2026-Q1",
+
+  "tiers": {
+    "tier_0": { "label": "Unverified", "unique_users_24h": 250, "throughput_mps": 80, "requirement": "Default for new unverified business portfolios" },
+    "tier_1": { "label": "Verified", "unique_users_24h": 1000, "throughput_mps": 80, "requirement": "Complete Business Verification OR send 1,000 delivered templates to unique users in 30 days with high quality" },
+    "tier_2": { "label": "Scaling", "unique_users_24h": 10000, "throughput_mps": 80, "requirement": "Automatic: 50%+ of Tier 1 used in 7 days + High quality" },
+    "tier_3": { "label": "Established", "unique_users_24h": 100000, "throughput_mps": 80, "requirement": "Automatic: 50%+ of Tier 2 used in 7 days + High quality" },
+    "tier_4": { "label": "Unlimited", "unique_users_24h": null, "throughput_mps": 1000, "requirement": "Automatic: 50%+ of Tier 3 used in 7 days + High quality" }
+  },
+
+  "tier_upgrade": {
+    "check_interval_hours": 6,
+    "usage_threshold_percent": 50,
+    "usage_lookback_days": 7,
+    "required_quality": "HIGH",
+    "scaling_to_2000_paths": [
+      "business_verification",
+      "partner_led_verification",
+      "send_2000_delivered_unique_30_days_high_quality"
+    ]
+  },
+
+  "quality_rating": {
+    "levels": {
+      "HIGH": { "color": "green", "can_upgrade": true, "action": "normal_operation" },
+      "MEDIUM": { "color": "yellow", "can_upgrade": false, "action": "reduce_volume_50_percent" },
+      "LOW": { "color": "red", "can_upgrade": false, "action": "pause_all_campaigns" }
+    },
+    "evaluation_window_days": 7,
+    "recency_weighted": true,
+    "signals": [
+      { "name": "block_rate", "weight": "highest", "danger_threshold_percent": 2.0 },
+      { "name": "report_rate", "weight": "very_high", "danger_threshold_percent": 0.5 },
+      { "name": "read_rate", "weight": "high", "good_threshold_percent": 65.0 },
+      { "name": "reply_rate", "weight": "medium", "good_threshold_percent": 5.0 },
+      { "name": "block_reasons", "weight": "high", "negative_reasons": ["didnt_sign_up", "too_many_messages"] },
+      { "name": "template_quality", "weight": "medium" },
+      { "name": "opt_in_compliance", "weight": "high" }
+    ]
+  },
+
+  "phone_number_status": {
+    "CONNECTED": { "can_send": true, "can_upgrade": true },
+    "FLAGGED": {
+      "trigger": "quality_rating_reaches_LOW",
+      "can_send": true,
+      "can_upgrade": false,
+      "grace_period_days": 7,
+      "if_improves_in_7_days": "returns_to_connected_tier_unchanged",
+      "if_not_improves_in_7_days": "returns_to_connected_tier_drops_one_level"
+    },
+    "RESTRICTED": {
+      "trigger": "reached_messaging_limit",
+      "can_send": false,
+      "recovery": "wait_for_24h_rolling_window"
+    }
+  },
+
+  "template_categories": {
+    "marketing": {
+      "purpose": "Promotional content, offers, product launches, campaigns",
+      "charged_in_csw": true,
+      "charged_outside_csw": true,
+      "examples": ["New listing alerts", "Discount offers", "Event invitations", "Newsletters"]
+    },
+    "utility": {
+      "purpose": "Transactional, account-related, customer-requested",
+      "charged_in_csw": false,
+      "charged_outside_csw": true,
+      "requirements_since_july_2025": [
+        "Must be non-promotional",
+        "Must be specific to or requested by the user OR essential/critical to the user"
+      ],
+      "examples": ["Order confirmations", "Appointment reminders", "Payment receipts"]
+    },
+    "authentication": {
+      "purpose": "OTPs, verification codes, security",
+      "charged_in_csw": true,
+      "charged_outside_csw": true,
+      "examples": ["Login codes", "2FA", "Account verification"]
+    },
+    "service": {
+      "purpose": "Customer-initiated responses within 24hr window",
+      "charged": false,
+      "note": "Not a template category. Free-form messages."
+    }
+  },
+
+  "template_rejection_rules": {
+    "auto_fail": [
+      { "id": "AF1", "rule": "Variable at start of template body", "example": "{{1}}, we have a new listing..." },
+      { "id": "AF2", "rule": "Variable at end of template body", "example": "...contact us at {{1}}" },
+      { "id": "AF3", "rule": "Consecutive variables without text", "example": "{{1}} {{2}}" },
+      { "id": "AF4", "rule": "Non-sequential variable numbering", "example": "{{1}}, {{2}}, {{4}} (missing {{3}})" },
+      { "id": "AF5", "rule": "URL shorteners in buttons", "examples": ["bit.ly", "t.ly", "tinyurl.com", "goo.gl", "ow.ly"] },
+      { "id": "AF6", "rule": "wa.me links in URL buttons" },
+      { "id": "AF7", "rule": "Lines containing only variables with no text" },
+      { "id": "AF8", "rule": "Duplicate body text of existing template" },
+      { "id": "AF9", "rule": "Language mismatch (selected language != content language)" },
+      { "id": "AF10", "rule": "Prohibited content (weapons, drugs, counterfeit, illegal)" },
+      { "id": "AF11", "rule": "Threatening or abusive content" },
+      { "id": "AF12", "rule": "Missing sample values for variables" },
+      { "id": "AF13", "rule": "Missing sample media for media header templates" }
+    ],
+    "quality_deductions": [
+      { "id": "QD1", "rule": "More than 2 emojis", "deduction": -15, "per": "total" },
+      { "id": "QD2", "rule": "ALL CAPS words (except proper nouns/abbreviations)", "deduction": -10, "per": "instance" },
+      { "id": "QD3", "rule": "More than 1 exclamation mark", "deduction": -5, "per": "extra" },
+      { "id": "QD4", "rule": "No personalization variable", "deduction": -15 },
+      { "id": "QD5", "rule": "No opt-out mechanism", "deduction": -25 },
+      { "id": "QD6", "rule": "Misspellings or grammar errors", "deduction": -10, "per": "instance" },
+      { "id": "QD7", "rule": "Category mismatch (marketing labeled as utility)", "deduction": -20 }
+    ],
+    "spam_trigger_words": [
+      "HOT DEAL", "URGENT", "ACT NOW", "LIMITED TIME", "DON'T MISS",
+      "EXCLUSIVE OFFER", "HURRY", "LAST CHANCE", "BUY NOW", "FREE",
+      "GUARANTEED", "NO RISK", "WINNER", "CONGRATULATIONS", "CLICK HERE",
+      "100%", "BEST PRICE", "LOWEST PRICE", "AMAZING DEAL", "UNBELIEVABLE"
+    ],
+    "spam_trigger_deduction": -20
+  },
+
+  "template_scoring": {
+    "max_score": 100,
+    "bonuses": [
+      { "id": "B1", "rule": "Personal greeting (Hi {{1}})", "bonus": 10 },
+      { "id": "B2", "rule": "Specific property/product details", "bonus": 10 },
+      { "id": "B3", "rule": "Clear question or CTA", "bonus": 10 },
+      { "id": "B4", "rule": "Quick reply buttons", "bonus": 15 },
+      { "id": "B5", "rule": "Opt-out quick reply included", "bonus": 15 },
+      { "id": "B6", "rule": "Concise (under 160 chars)", "bonus": 5 },
+      { "id": "B7", "rule": "Detailed but not long (160-320 chars)", "bonus": 10 },
+      { "id": "B8", "rule": "Natural conversational tone", "bonus": 10 },
+      { "id": "B9", "rule": "Arabic language support", "bonus": 5 }
+    ],
+    "grades": {
+      "A": { "min": 80, "label": "Excellent", "recommendation": "Send with confidence" },
+      "B": { "min": 60, "label": "Good", "recommendation": "Minor improvements suggested" },
+      "C": { "min": 40, "label": "Risky", "recommendation": "Significant improvements needed" },
+      "D": { "min": 20, "label": "Dangerous", "recommendation": "Major rewrite required" },
+      "F": { "min": 0, "label": "Fail", "recommendation": "Do not send. Complete rewrite." }
+    }
+  },
+
+  "warmup_phases": {
+    "phase_0": { "days": "1-2", "daily_max": 0, "description": "Setup only. Connect API, verify business.", "allowed_tiers": [] },
+    "phase_1": { "days": "3-9", "daily_max": 50, "batch_size": 10, "batches_per_day": 4, "description": "Known contacts only (P1)", "allowed_tiers": ["P1"] },
+    "phase_2": { "days": "10-16", "daily_max": 150, "batch_size": 25, "batches_per_day": 4, "description": "Expand to P2", "allowed_tiers": ["P1", "P2"] },
+    "phase_3": { "days": "17-23", "daily_max": 500, "batch_size": 50, "batches_per_day": 6, "description": "Push toward 50% of Tier 1", "allowed_tiers": ["P1", "P2"] },
+    "phase_4": { "days": "24-30", "daily_max": 1000, "batch_size": 100, "batches_per_day": 6, "description": "Trigger Tier 1→2 upgrade", "allowed_tiers": ["P1", "P2", "P3"] },
+    "phase_5": { "days": "31-44", "daily_max": 5000, "batch_size": 250, "batches_per_day": 8, "description": "Scale within Tier 2", "allowed_tiers": ["P1", "P2", "P3"] },
+    "phase_6": { "days": "45-58", "daily_max": 10000, "batch_size": 500, "batches_per_day": 8, "description": "Trigger Tier 2→3 upgrade", "allowed_tiers": ["P1", "P2", "P3"] },
+    "phase_7": { "days": "59+", "daily_max": null, "batch_size": 500, "batches_per_day": 8, "description": "Full campaign mode. Limit = 80% of tier.", "allowed_tiers": ["P1", "P2", "P3"] }
+  },
+
+  "contact_warmth": {
+    "P1": {
+      "label": "Safest",
+      "criteria": "Existing clients, active leads, interaction within 30 days",
+      "expected_block_rate_max": 1.0,
+      "send_priority": 1
+    },
+    "P2": {
+      "label": "Warm",
+      "criteria": "Past inquiries 30-90 days, open house attendees, website leads",
+      "expected_block_rate_max": 3.0,
+      "send_priority": 2
+    },
+    "P3": {
+      "label": "Cool",
+      "criteria": "Old inquiries 90+ days, event lists, referrals without direct contact",
+      "expected_block_rate_max": 5.0,
+      "send_priority": 3
+    },
+    "P4": {
+      "label": "Cold",
+      "criteria": "Purchased/scraped lists, no prior touchpoint",
+      "expected_block_rate_max": 15.0,
+      "send_priority": null,
+      "whatsapp_allowed": false,
+      "alternative": "Route to CTWA ads (Click-to-WhatsApp)"
+    }
+  },
+
+  "auto_throttle": {
+    "quality_high_to_medium": {
+      "action": "reduce_daily_limit_50_percent",
+      "alert": true,
+      "pause_campaigns": false
+    },
+    "quality_to_low": {
+      "action": "set_daily_limit_zero",
+      "alert": true,
+      "pause_campaigns": true,
+      "alert_level": "urgent"
+    },
+    "quality_low_to_high_or_medium": {
+      "action": "restore_phase_default",
+      "ramp_up": "50_percent_for_48_hours_then_full",
+      "alert": true
+    },
+    "batch_block_rate_above_2_percent": {
+      "action": "pause_campaign",
+      "alert": true,
+      "flag_template_for_review": true
+    },
+    "daily_block_rate_above_1_5_percent": {
+      "action": "reduce_remaining_batches_50_percent",
+      "alert": true
+    }
+  },
+
+  "frequency_capping": {
+    "error_code": 131049,
+    "description": "User has reached daily marketing message limit (~2 per day across all businesses)",
+    "affects_quality": false,
+    "action": "retry_next_day",
+    "alert_threshold_percent": 20,
+    "alert_message": "High frequency capping detected. Consider scheduling for off-peak hours or spreading across multiple days."
+  },
+
+  "error_codes": {
+    "131026": { "meaning": "User not on WhatsApp", "action": "mark_contact_invalid", "retry": false },
+    "131047": { "meaning": "Re-engagement needed (>24hr)", "action": "use_template_message", "retry": false },
+    "131049": { "meaning": "Frequency cap reached", "action": "retry_next_day", "retry": true, "affects_quality": false },
+    "131051": { "meaning": "Unsupported message type", "action": "check_template_format", "retry": false },
+    "131053": { "meaning": "Media upload error", "action": "re_upload_media", "retry": true },
+    "131056": { "meaning": "Pair rate limit (too many to same user)", "action": "slow_down", "retry": true },
+    "368": { "meaning": "Temporarily blocked for policy violation", "action": "pause_everything_review_content", "retry": false, "severity": "critical" },
+    "131031": { "meaning": "Account locked", "action": "contact_meta_support", "retry": false, "severity": "critical" },
+    "130429": { "meaning": "API rate limit hit", "action": "exponential_backoff", "retry": true },
+    "132000": { "meaning": "Template param count mismatch", "action": "fix_parameters", "retry": false },
+    "132012": { "meaning": "Template not found", "action": "sync_templates", "retry": false },
+    "132015": { "meaning": "Template paused by Meta", "action": "stop_using_review_quality", "retry": false }
+  },
+
+  "opt_out_keywords": {
+    "english": ["STOP", "UNSUBSCRIBE", "CANCEL", "QUIT", "END", "OPT OUT", "REMOVE ME", "NO MORE"],
+    "arabic": ["إلغاء", "توقف", "إيقاف", "لا أريد", "أوقف", "كفى"]
+  },
+
+  "pricing_uae": {
+    "currency": "USD",
+    "effective_date": "2025-07-01",
+    "model": "per_message",
+    "rates": {
+      "marketing": { "per_message_usd": 0.0893, "per_message_aed": 0.328 },
+      "utility_outside_csw": { "per_message_usd": 0.0316, "per_message_aed": 0.116 },
+      "utility_inside_csw": { "per_message_usd": 0, "per_message_aed": 0 },
+      "authentication": { "per_message_usd": 0.0169, "per_message_aed": 0.062 },
+      "service": { "per_message_usd": 0, "per_message_aed": 0 }
+    },
+    "free_entry_point_window_hours": 72,
+    "sendara_markup_percent": 12
+  },
+
+  "policy_changelog": [
+    { "date": "2026-01-15", "change": "General-purpose AI bots banned on WhatsApp Business API. Only business-specific automation allowed." },
+    { "date": "2025-10-07", "change": "Portfolio-level messaging limits replace per-number limits. All numbers share highest tier." },
+    { "date": "2025-07-01", "change": "Per-message pricing replaces conversation-based pricing. Utility free in CSW. Volume tiers introduced." },
+    { "date": "2025-07-01", "change": "Utility definition tightened: must be non-promotional and specific to or requested by user." },
+    { "date": "2025-04-09", "change": "Meta may auto-reclassify template categories. Utility → Marketing if promotional intent detected." },
+    { "date": "2025-04-01", "change": "US marketing templates paused (no marketing to +1 numbers)." },
+    { "date": "2024-11-01", "change": "All service conversations made free for all businesses." }
+  ]
+}

@@ -4,6 +4,13 @@ import { motion } from "framer-motion";
 import { Flame, Shield, Sparkles, Users, Send, Link } from "lucide-react";
 import SectionLabel from "@/components/ui/SectionLabel";
 import { FEATURES } from "@/lib/constants";
+import WarmupTimeline from "@/components/mockups/WarmupTimeline";
+import QualityCard from "@/components/mockups/QualityCard";
+import BeforeAfter from "@/components/mockups/BeforeAfter";
+import ContactList from "@/components/mockups/ContactList";
+import CampaignCard from "@/components/mockups/CampaignCard";
+import DashboardMockup from "@/components/mockups/DashboardMockup";
+import { ReactNode } from "react";
 
 const iconMap: Record<string, React.ElementType> = {
   Flame,
@@ -12,6 +19,15 @@ const iconMap: Record<string, React.ElementType> = {
   Users,
   Send,
   Link,
+};
+
+const mockupMap: Record<string, ReactNode> = {
+  "Warm-Up Automation Engine": <WarmupTimeline />,
+  "Quality Shield": <QualityCard />,
+  "AI Template Optimizer": <BeforeAfter />,
+  "Smart Segmentation": <ContactList />,
+  "Telegram Campaigns": <CampaignCard />,
+  "Works With Your CRM": <DashboardMockup />,
 };
 
 export default function Features() {
@@ -35,6 +51,7 @@ export default function Features() {
           {FEATURES.map((feature, i) => {
             const Icon = iconMap[feature.icon] || Flame;
             const isEven = i % 2 === 1;
+            const Mockup = mockupMap[feature.title];
 
             return (
               <motion.div
@@ -57,19 +74,7 @@ export default function Features() {
                   </p>
                 </div>
                 <div className={isEven ? "md:order-1" : ""}>
-                  {/* Abstract feature visual */}
-                  <div className="bg-gradient-to-br from-sendara-teal-light to-white rounded-2xl p-8 border border-sendara-teal/10">
-                    <div className="space-y-3">
-                      <div className="h-3 bg-sendara-teal/10 rounded-full w-3/4" />
-                      <div className="h-3 bg-sendara-teal/10 rounded-full w-1/2" />
-                      <div className="h-3 bg-sendara-teal/10 rounded-full w-5/6" />
-                      <div className="mt-6 flex gap-3">
-                        <div className="h-20 flex-1 bg-sendara-teal/5 rounded-xl border border-sendara-teal/10" />
-                        <div className="h-20 flex-1 bg-sendara-bright/5 rounded-xl border border-sendara-bright/10" />
-                      </div>
-                      <div className="h-2 bg-gradient-to-r from-sendara-teal to-sendara-bright rounded-full w-2/3 mt-4" />
-                    </div>
-                  </div>
+                  {Mockup}
                 </div>
               </motion.div>
             );

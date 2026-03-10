@@ -279,3 +279,54 @@ NEXT_PUBLIC_APP_URL=
   "next-sitemap": "latest"
 }
 ```
+
+---
+
+## WhatsApp API Knowledge Base
+
+Two reference files are included in this project root:
+
+### WHATSAPP_API_KNOWLEDGE.md
+The master knowledge base covering ALL Meta WhatsApp Business API rules. Claude Code MUST reference this file when building any feature related to:
+- Warm-up engine logic and phase transitions
+- Quality rating monitoring and auto-throttle
+- Template analyzer / message scorer
+- Campaign sequencing and batch scheduling
+- Contact warmth scoring algorithm
+- Dashboard metrics and health indicators
+- Error handling and retry logic
+- Pricing calculations
+- Opt-out detection
+
+### whatsapp_rules.json
+Structured rules data that the product code imports directly. Contains:
+- Tier definitions and upgrade criteria
+- Template scoring rubric (spam signals, quality bonuses, grades)
+- Warm-up phase configurations (daily limits, batch sizes, allowed tiers)
+- Contact warmth tier definitions
+- Auto-throttle rules
+- Error code handlers
+- Opt-out keywords (English + Arabic)
+- UAE pricing rates with Sendara markup
+- Policy changelog
+
+**Usage in code:**
+```typescript
+import rules from '@/lib/whatsapp-rules.json';
+
+// Access tier info
+const tier2Limit = rules.tiers.tier_2.unique_users_24h; // 10000
+
+// Check spam words
+const isSpamWord = (word: string) =>
+  rules.template_rejection_rules.spam_trigger_words.includes(word.toUpperCase());
+
+// Get warmup phase config
+const phase = rules.warmup_phases[`phase_${agency.warmup_phase}`];
+const dailyMax = phase.daily_max;
+
+// Check error handling
+const errorAction = rules.error_codes["131049"].action; // "retry_next_day"
+```
+
+**IMPORTANT:** When Meta changes their policies, update BOTH files and bump the version. The product should display the `last_updated` date from the JSON in the dashboard so agencies know the rules are current.

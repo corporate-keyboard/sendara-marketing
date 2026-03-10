@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import Button from "@/components/ui/Button";
+import DashboardMockup from "@/components/mockups/DashboardMockup";
 
 export default function Hero() {
   return (
@@ -48,71 +49,7 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="hidden lg:block"
           >
-            <div className="relative">
-              {/* Abstract dashboard mockup */}
-              <div className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6 shadow-2xl">
-                {/* Top bar */}
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-3 h-3 rounded-full bg-danger/60" />
-                  <div className="w-3 h-3 rounded-full bg-warning/60" />
-                  <div className="w-3 h-3 rounded-full bg-success/60" />
-                  <div className="flex-1 h-6 bg-white/5 rounded-md ml-4" />
-                </div>
-                {/* Quality rating card */}
-                <div className="bg-gradient-to-br from-sendara-teal/20 to-sendara-bright/10 rounded-xl p-4 mb-4 border border-sendara-teal/20">
-                  <div className="text-xs text-sendara-bright font-body uppercase tracking-wider mb-2">
-                    Quality Rating
-                  </div>
-                  <div className="flex items-end gap-2">
-                    <span className="text-3xl font-heading font-bold text-white">
-                      Green
-                    </span>
-                    <span className="text-success text-sm mb-1">
-                      &#9650; Healthy
-                    </span>
-                  </div>
-                  <div className="mt-3 h-2 bg-white/10 rounded-full overflow-hidden">
-                    <div className="h-full w-4/5 bg-gradient-to-r from-sendara-teal to-sendara-bright rounded-full" />
-                  </div>
-                </div>
-                {/* Stats row */}
-                <div className="grid grid-cols-3 gap-3">
-                  {[
-                    { label: "Sent Today", value: "847" },
-                    { label: "Delivered", value: "99.2%" },
-                    { label: "Warm-Up", value: "Phase 4" },
-                  ].map((stat) => (
-                    <div key={stat.label} className="bg-white/5 rounded-lg p-3">
-                      <div className="text-[10px] text-white/40 font-body uppercase tracking-wider">
-                        {stat.label}
-                      </div>
-                      <div className="text-lg font-heading font-semibold text-white mt-1">
-                        {stat.value}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              {/* Floating notification */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.4 }}
-                className="absolute -bottom-4 -left-4 bg-white rounded-xl shadow-xl p-3 flex items-center gap-3"
-              >
-                <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
-                  <span className="text-success text-sm">&#10003;</span>
-                </div>
-                <div>
-                  <div className="text-xs font-body font-medium text-sendara-navy">
-                    Campaign Delivered
-                  </div>
-                  <div className="text-[10px] text-sendara-navy/50">
-                    847 messages sent safely
-                  </div>
-                </div>
-              </motion.div>
-            </div>
+            <DashboardMockup />
           </motion.div>
         </div>
       </div>
