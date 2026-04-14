@@ -12,6 +12,7 @@ const FOOTER_LINKS = {
   Company: [
     { label: "About", href: "#" },
     { label: "Contact", href: "#lead-capture" },
+    { label: "Log In", href: "https://app.sendara.one/login" },
   ],
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },

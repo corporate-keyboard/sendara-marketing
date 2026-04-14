@@ -50,6 +50,16 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
+            <a
+              href="https://app.sendara.one/login"
+              className={`font-body text-sm font-medium transition-colors ${
+                scrolled
+                  ? "text-sendara-navy hover:text-sendara-teal"
+                  : "text-white/80 hover:text-white"
+              }`}
+            >
+              Log In
+            </a>
             <a href="#lead-capture">
               <Button size="sm">Get a Call Back</Button>
             </a>
@@ -86,6 +96,13 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
+            <a
+              href="https://app.sendara.one/login"
+              onClick={() => setMobileOpen(false)}
+              className="block px-4 py-3 text-sendara-navy font-body text-base hover:bg-sendara-off-white"
+            >
+              Log In
+            </a>
             <div className="px-4 pt-2">
               <a href="#lead-capture" onClick={() => setMobileOpen(false)}>
                 <Button size="sm" className="w-full">
