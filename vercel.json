@@ -1,0 +1,21 @@
+{
+  "redirects": [
+    { "source": "/login", "destination": "https://app.sendara.one/login", "permanent": true },
+    { "source": "/signin", "destination": "https://app.sendara.one/login", "permanent": true },
+    { "source": "/signup", "destination": "https://app.sendara.one/register", "permanent": true },
+    { "source": "/register", "destination": "https://app.sendara.one/register", "permanent": true },
+    { "source": "/dashboard/:path*", "destination": "https://app.sendara.one/dashboard/:path*", "permanent": true },
+    { "source": "/onboarding/:path*", "destination": "https://app.sendara.one/onboarding/:path*", "permanent": true },
+    { "source": "/admin/:path*", "destination": "https://app.sendara.one/admin/:path*", "permanent": true },
+    { "source": "/settings/:path*", "destination": "https://app.sendara.one/settings/:path*", "permanent": true },
+    { "source": "/billing/:path*", "destination": "https://app.sendara.one/billing/:path*", "permanent": true },
+    { "source": "/campaigns/:path*", "destination": "https://app.sendara.one/campaigns/:path*", "permanent": true },
+    { "source": "/contacts/:path*", "destination": "https://app.sendara.one/contacts/:path*", "permanent": true },
+    { "source": "/templates/:path*", "destination": "https://app.sendara.one/templates/:path*", "permanent": true },
+    { "source": "/listings/:path*", "destination": "https://app.sendara.one/listings/:path*", "permanent": true },
+    { "source": "/inbox/:path*", "destination": "https://app.sendara.one/inbox/:path*", "permanent": true },
+    { "source": "/analytics/:path*", "destination": "https://app.sendara.one/analytics/:path*", "permanent": true },
+    { "source": "/reports/:path*", "destination": "https://app.sendara.one/reports/:path*", "permanent": true },
+    { "source": "/usage/:path*", "destination": "https://app.sendara.one/usage/:path*", "permanent": true }
+  ]
+}
