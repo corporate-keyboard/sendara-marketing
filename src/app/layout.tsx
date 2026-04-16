@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Inter } from "next/font/google";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -44,6 +45,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${plusJakarta.variable} ${inter.variable} font-body antialiased`}>
         {children}
+        <SpeedInsights />
       </body>
     </html>
   );
